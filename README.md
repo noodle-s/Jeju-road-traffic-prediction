@@ -55,7 +55,7 @@ base_hour : 시간대(00시 ~ 23시)
 lane_count : 차로수(차선 개수)
 road_rating : 도로등급(국토교통부 교통체계 링크 참조. 101부터 107까지 총 7개 분류)
 multi_linked : 중용구간(2개 이상의 노선이 도로의 일정 구간을 공동으로 사용) 여부
-connect_code : 연결로 코드(국토교통부 교통체계 링크 참조. 000, 101, 102, ... , 108까지 총 9개 분류)
+connect_code : 연결로 코드(국토교통부 교통체계 링크 참조. 000 ~ 108 총 9개 분류)
 maximum_speed_limit : 최고속도제한(단위: km/h)
 weight_restricted : 통과제한하중
 height_restricted : 통과제한높이
