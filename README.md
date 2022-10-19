@@ -39,7 +39,11 @@
    
 # 2. 개발 환경
 
-[]()
+[Prepared CUDA based Image for this project]()
+
+```
+$ docker pull lotee/road-traffic
+```
 
 # 3. 데이터
 
