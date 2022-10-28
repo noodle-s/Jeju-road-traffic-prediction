@@ -76,7 +76,7 @@ def road_count_add(data):
     data['base_date_hour'] = data['base_date'].astype(str) + data['base_hour'].str.zfill(2)
     data['base_date_hour'] = pd.to_datetime(data['base_date_hour'], format='%Y%m%d%H')
     road_visit_count = data[["base_date_hour",'road_name']]
-    road_visit_count = road_visit_count.groupby("base_date_hour",as_index=False)["road_name"].value_counts()
+    road_visit_count = road_visit_count.groupby(["base_date_hour","road_name"],as_index=False).value_counts()
     road_visit_count = road_visit_count.rename(columns={"count": "road_visit_count"})
     data = data.merge(road_visit_count, on=['base_date_hour','road_name'])
     data = data.drop('base_date_hour', axis=1)
@@ -116,10 +116,10 @@ def lgbm_fit(data):
                                learning_rate=0.05,
                                num_leaves=20,
                                min_child_samples=150,
-                               max_depth=30,
+                               max_depth=20,
                                device='gpu') # 20 25 30
-    model.fit(data["X_train"], data["y_train"],
-                     early_stopping_rounds=100, eval_metric='MAE', eval_set=evals, verbose=True)
+    lgbm.early_stopping(stopping_rounds=100)
+    model.fit(data["X_train"], data["y_train"], eval_metric='MAE', eval_set=evals)
     lgbm_feature_importance(model)
 
     return model
