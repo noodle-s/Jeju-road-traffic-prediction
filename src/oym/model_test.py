@@ -103,6 +103,14 @@ def month_visitor_add(data):
 
     return data
 
+def lgbm_loss(callback):
+    f, ax = plt.subplots(figsize=(10, 10))
+    lgbm.plot_metric(callback, ax=ax)
+    print(callback[-1])
+    plt.savefig("./lgbm_loss.png")
+    plt.show()
+    plt.close()
+
 def lgbm_feature_importance(model):
     f, ax = plt.subplots(figsize=(10, 10))
     lgbm.plot_importance(model, max_num_features=25, ax=ax)
@@ -111,15 +119,20 @@ def lgbm_feature_importance(model):
     plt.close()
 
 def lgbm_fit(data):
+    callback = {}
     evals = [(data['X_val'], data["y_val"])]
-    model = lgbm.LGBMRegressor(n_estimators=200000,
+    model = lgbm.LGBMRegressor(n_estimators=100000,
                                learning_rate=0.05,
                                num_leaves=20,
                                min_child_samples=150,
                                max_depth=20,
-                               device='gpu') # 20 25 30
+                               device='gpu',
+                               gpu_platform_id=0, # 1 0
+                               gpu_device_id=0) #
     lgbm.early_stopping(stopping_rounds=100)
-    model.fit(data["X_train"], data["y_train"], eval_metric='MAE', eval_set=evals)
+    model.fit(data["X_train"], data["y_train"], eval_metric='MAE', eval_set=evals,
+              callbacks = [lgbm.record_evaluation(callback)])
+    lgbm_loss(callback)
     lgbm_feature_importance(model)
 
     return model
